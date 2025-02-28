@@ -8,7 +8,7 @@ class DownloadsScreen extends StatefulWidget {
 }
 
 class _DownloadsScreenState extends State<DownloadsScreen> {
-  List<File> downloadedFiles = [];
+  List<FileSystemEntity> downloadedFiles = [];
 
   @override
   void initState() {
@@ -17,12 +17,30 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
   }
 
   Future<void> fetchDownloads() async {
-    Directory? dir = await getExternalStorageDirectory();
-    List<FileSystemEntity> files = dir!.listSync();
+    try {
+      Directory dir = await getApplicationDocumentsDirectory();
+      List<FileSystemEntity> files = dir.listSync();
 
-    setState(() {
-      downloadedFiles = files.whereType<File>().toList();
-    });
+      setState(() {
+        downloadedFiles = files
+            .where((file) =>
+        file is File &&
+            !file.path.split('/').last.startsWith('res_timestamp-')) // Excluded unwanted files
+            .toList();
+      });
+    } catch (e) {
+      debugPrint("Error fetching downloads: $e");
+    }
+  }
+
+
+  // Function to check if the file is an image
+  bool isImageFile(String path) {
+    return path.endsWith('.png') ||
+        path.endsWith('.jpg') ||
+        path.endsWith('.jpeg') ||
+        path.endsWith('.gif') ||
+        path.endsWith('.webp');
   }
 
   @override
@@ -30,13 +48,24 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
     return Scaffold(
       appBar: AppBar(title: Text("Downloads")),
       body: downloadedFiles.isEmpty
-          ? Center(child: Text("No Downloads"))
-          : ListView.builder(
+          ? Center(
+        child: Text(
+          "No Downloads",
+          style: TextStyle(fontSize: 18, color: Colors.grey),
+        ),
+      )
+          : ListView.separated(
         itemCount: downloadedFiles.length,
+        separatorBuilder: (context, index) => Divider(),
         itemBuilder: (context, index) {
+          File file = File(downloadedFiles[index].path);
+          String fileName = file.path.split('/').last;
+
           return ListTile(
-            leading: Image.file(downloadedFiles[index], width: 50, height: 50, fit: BoxFit.cover),
-            title: Text(downloadedFiles[index].path.split('/').last),
+            leading: isImageFile(file.path)
+                ? Image.file(file, width: 120, height: 150, fit: BoxFit.fill)
+                : Icon(Icons.insert_drive_file, size: 50, color: Colors.grey),
+            title: Text(fileName),
           );
         },
       ),
