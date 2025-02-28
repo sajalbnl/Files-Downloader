@@ -6,23 +6,24 @@ The File Downloader App is a Flutter application that allows users to download f
 
 ### Features 
 
-Download files from URLs.
+* Download files from URLs.
 
-Show download progress in real-time.
+* Show download progress in real-time.
 
-Resume and pause downloads.
+* Save downloaded files to local storage.
 
-Save downloaded files to local storage.
+* Search files by id
 
-Responsive UI with Flutter.
+* Downloads section to view all downloaded files..
 
 ### Instructions to Run the App
 
 *Prerequisites*
+
 Flutter installed on your system (Install Flutter).
 
-
 git clone (https://github.com/sajalbnl/Files-Downloader)
+
 cd files-downloader
 
 Install dependencies: flutter pub get
@@ -31,7 +32,7 @@ Run the app: flutter run
 
 ### RapidAPI Integration
 
-This app uses RapidAPI to fetch download links for files. The API helps in getting valid file URLs, ensuring a secure and smooth download experience.
+This app uses RapidAPI to fetch images of cats. The API helps in getting valid file URLs, ensuring a secure and smooth download experience.
 
 API Details: Base URL: https://free-images-api.p.rapidapi.com/v2/cat/1
 
@@ -47,13 +48,11 @@ curl --request GET \
 
 ### State Management Approach
 
-This application uses Provider for state management.
+* This application uses Provider for state management.
 
-DownloadStateProvider: Manages the download status.
+* ThemeProvider: Handles dark/light mode changes.
 
-ThemeProvider: Handles dark/light mode changes.
-
-Using Provider ensures efficient state updates and enhances performance.
+* Using Provider ensures efficient state updates and enhances performance.
 
 ### Additional Features
 
